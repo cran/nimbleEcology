@@ -1,7 +1,7 @@
-#' Dynamic Hidden Markov Model distribution for use in NIMBLE models
+#' Dynamic Hidden Markov Model distribution for use in \code{nimble} models
 #'
 #' \code{dDHMM} and \code{dDHMMo} provide Dynamic hidden Markov model
-#' distributions for NIMBLE models.
+#' distributions for \code{nimble} models.
 #'
 #' @name dDHMM
 #' @aliases dDHMM dDHMMo rDHMM rDHMMo
@@ -50,7 +50,8 @@
 #'
 #' \code{probTrans} has dimension S x S x (T - 1). \code{probTrans}[i, j, t] is
 #' the probability that an individual in state \code{i} at time \code{t} takes on
-#' state \code{j} at time \code{t+1}.
+#' state \code{j} at time \code{t+1}. The length of the third dimension may be greater
+#' than (T - 1) but all values indexed greater than T - 1 will be ignored.
 #'
 #' \code{initStates} has length S. \code{initStates[i]} is the
 #' probability of being in state \code{i} at the first observation time.
@@ -205,7 +206,7 @@ dDHMMo <- nimbleFunction(
     if (length(init) != dim(probTrans)[1]) stop("Length of init does not match dim(probTrans)[1] in dDHMMo.")
     if (length(init) != dim(probTrans)[2]) stop("Length of init does not match dim(probTrans)[2] in dDHMMo.")
     if (length(x) != len) stop("Length of x does not match len in dDHMM.")
-    if (len - 1 != dim(probTrans)[3]) stop("dim(probTrans)[3] does not match len - 1 in dDHMMo.")
+    if (len - 1 > dim(probTrans)[3]) stop("dim(probTrans)[3] does not match len - 1 in dDHMMo.")
     if (len != dim(probObs)[3]) stop("dim(probObs)[3] does not match len in dDHMMo.")
 
     pi <- init # State probabilities at time t=1
@@ -237,7 +238,7 @@ rDHMM <- nimbleFunction(
     if (nStates != dim(probObs)[1]) stop("Length of init does not match nrow of probObs in dDHMM.")
     if (nStates != dim(probTrans)[1]) stop("Length of init does not match dim(probTrans)[1] in dDHMM.")
     if (nStates != dim(probTrans)[2]) stop("Length of init does not match dim(probTrans)[2] in dDHMM.")
-    if (len - 1 != dim(probTrans)[3]) stop("len - 1 does not match dim(probTrans)[3] in dDHMM.")
+    if (len - 1 > dim(probTrans)[3]) stop("len - 1 does not match dim(probTrans)[3] in dDHMM.")
 
     returnType(double(1))
     ans <- numeric(len)
@@ -329,34 +330,3 @@ rDHMMo <- nimbleFunction(
 #     }
 #     return(ans)
 #   })
-
-
-
-registerDistributions(list(
-  dDHMM = list(
-    BUGSdist = "dDHMM(init, probObs, probTrans, len)",
-    Rdist = "dDHMM(init, probObs, probTrans, len)",
-    discrete = TRUE,
-    types = c('value = double(1)',
-              'init = double(1)',
-              'probObs = double(2)',
-              'probTrans = double(3)',
-              'len = double()'),
-    mixedSizes = TRUE,
-    pqAvail = FALSE))
-  )
-
-registerDistributions(list(
-  dDHMMo = list(
-    BUGSdist = "dDHMMo(init, probObs, probTrans, len)",
-    Rdist = "dDHMMo(init, probObs, probTrans, len)",
-    discrete = TRUE,
-    types = c('value = double(1)',
-              'init = double(1)',
-              'probObs = double(3)',
-              'probTrans = double(3)',
-              'len = double()'),
-    mixedSizes = TRUE,
-    pqAvail = FALSE))
-  )
-
