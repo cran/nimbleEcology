@@ -70,12 +70,12 @@ samples_new <- runMCMC(CMCMC_new, niter = 10000, nburnin = 500, thin = 10)
 
 {
 plot(density(as.data.frame(samples)$psi), col = "red", main = "psi")
-points(density(as.data.frame(samples_new)$psi), col = "blue", type = "l", add = TRUE)
+points(density(as.data.frame(samples_new)$psi), col = "blue", type = "l")
 }
 
 {
 plot(density(as.data.frame(samples)$p), col = "red", main = "p")
-points(density(as.data.frame(samples_new)$p), col = "blue", type = "l", add = TRUE)
+points(density(as.data.frame(samples_new)$p), col = "blue", type = "l")
 }
 
 
