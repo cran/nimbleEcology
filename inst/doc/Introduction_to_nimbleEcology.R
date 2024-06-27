@@ -5,7 +5,7 @@ knitr::opts_chunk$set(
   ,eval = TRUE ## uncomment this to build quickly without running code.
 )
 
-## ---- results='hide', messages=FALSE,warnings=FALSE---------------------------
+## ----results='hide', messages=FALSE,warnings=FALSE----------------------------
 library(nimble)
 library(nimbleEcology)
 
@@ -49,14 +49,14 @@ MCMC <- buildMCMC(occupancy_model)
 
 ## -----------------------------------------------------------------------------
 ## These can be done in one step, but many people
-## find it convenient to do it in two steps.
+## find it convenient to do them in two steps.
 Coccupancy_model <- compileNimble(occupancy_model)
 CMCMC <- compileNimble(MCMC, project = occupancy_model)
 
-## ---- results='hide', messages=FALSE,warnings=FALSE---------------------------
+## ----results='hide', messages=FALSE,warnings=FALSE----------------------------
 samples <- runMCMC(CMCMC, niter = 10000, nburnin = 500, thin = 10)
 
-## ---- results='hide', messages=FALSE,warnings=FALSE---------------------------
+## ----results='hide', messages=FALSE,warnings=FALSE----------------------------
 occupancy_model_new <- nimbleModel(occupancy_code_new,
                                    constants = list(nSites = 50, nVisits = 5),
                                    data = list(y = occupancy_model$y),
@@ -66,7 +66,7 @@ Coccupancy_model_new <- compileNimble(occupancy_model_new)
 CMCMC_new <- compileNimble(MCMC_new, project = occupancy_model_new)
 samples_new <- runMCMC(CMCMC_new, niter = 10000, nburnin = 500, thin = 10)
 
-## ---- echo = FALSE, results='hide', messages=FALSE,warnings=FALSE-------------
+## ----echo = FALSE, results='hide', messages=FALSE,warnings=FALSE--------------
 
 {
 plot(density(as.data.frame(samples)$psi), col = "red", main = "psi")
